@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BUTORION-SMP — Приватный сервер Minecraft 1.21.1</title>
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Unbounded:wght@600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0e;
+      --bg-card: #131318;
+      --bg-card-hover: #191922;
+      --gold: #f5b942;
+      --gold-bright: #ffd36e;
+      --gold-dim: rgba(245, 185, 66, 0.14);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(245, 185, 66, 0.35);
+      --text: #f4f4f6;
+      --text-muted: #9898a6;
+      --discord: #5865F2;
+      --discord-hover: #4752c4;
+      --green: #34d399;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bg-glow {
+      position: fixed;
+      top: -180px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 550px;
+      background: radial-gradient(circle, rgba(245, 185, 66, 0.14) 0%, rgba(11, 11, 14, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at top, black 20%, transparent 75%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), #d98218);
+      color: #0b0b0e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 0 20px rgba(245, 185, 66, 0.35);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.offline {
+      background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    /* Переключение страниц */
+    .page {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Главный экран */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .season-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: var(--gold-dim);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-bright);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(2.1rem, 5.2vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.14;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #ffffff 30%, #c9c9d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, var(--gold-bright), #e08e1b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 610px;
+      color: var(--text-muted);
+      font-size: 1.08rem;
+      margin-bottom: 36px;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 26px;
+      width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 34px;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold-bright), #e6911e);
+      color: #0b0b0e;
+      box-shadow: 0 10px 30px rgba(245, 185, 66, 0.28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(245, 185, 66, 0.42);
+    }
+
+    .btn-discord {
+      background: var(--discord);
+      color: #ffffff;
+      box-shadow: 0 10px 30px rgba(88, 101, 242, 0.25);
+    }
+
+    .btn-discord:hover {
+      background: var(--discord-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 12px 22px;
+      font-size: 0.92rem;
+      border-radius: 11px;
+    }
+
+    .whitelist-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      background: rgba(88, 101, 242, 0.09);
+      border: 1px solid rgba(88, 101, 242, 0.25);
+      padding: 8px 16px;
+      border-radius: 10px;
+    }
+
+    .whitelist-hint strong {
+      color: #c7ceff;
+    }
+
+    .features {
+      padding: 10px 0 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-gold);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--gold-dim);
+      color: var(--gold-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-size: 1.06rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Вторая страница: Начать играть */
+    .play-section {
+      padding: 48px 0 80px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 28px;
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--border-gold);
+    }
+
+    .play-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.3rem);
+      margin-bottom: 10px;
+    }
+
+    .play-sub {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-size: 1rem;
+    }
+
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .step-card.whitelist-card {
+      border-color: rgba(88, 101, 242, 0.45);
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.12), var(--bg-card));
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .step-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--gold);
+      color: #0b0b0e;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-num.discord-num {
+      background: var(--discord);
+      color: #ffffff;
+    }
+
+    .step-header h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .step-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .dl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .dl-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+transition: all 0.2s;
+}
+.dl-box:hover {
+border-color: var(--gold);
+background: var(--gold-dim);
+transform: translateY(-2px);
+}
+.dl-box.featured {
+border-color: var(--border-gold);
+background: rgba(245, 185, 66, 0.07);
+}
+.dl-top {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 8px;
+margin-bottom: 8px;
+}
+.dl-name {
+font-weight: 700;
+font-size: 1.05rem;
+}
+.badge-rec {
+background: var(--gold);
+color: #0b0b0e;
+font-size: 0.7rem;
+font-weight: 800;
+padding: 3px 8px;
+border-radius: 6px;
+text-transform: uppercase;
+}
+.dl-info {
+font-size: 0.87rem;
+color: var(--text-muted);
+margin-bottom: 18px;
+}
+.dl-action {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+font-weight: 700;
+font-size: 0.92rem;
+color: var(--gold-bright);
+}
+.ip-row {
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+gap: 12px;
+}
+.ip-box {
+display: inline-flex;
+align-items: center;
+gap: 14px;
+background: #0d0d12;
+border: 1px solid var(--border-gold);
+padding: 12px 16px 12px 20px;
+border-radius: 12px;
+cursor: pointer;
+transition: background 0.2s;
+}
+.ip-box:hover {
+background: var(--bg-card-hover);
+}
+.ip-value {
+font-family: 'Unbounded', sans-serif;
+font-size: 1rem;
+color: var(--gold-bright);
+}
+.copy-badge {
+background: rgba(255, 255, 255, 0.08);
+padding: 6px 12px;
+border-radius: 8px;
+font-size: 0.8rem;
+font-weight: 600;
+}
+footer {
+margin-top: auto;
+padding: 28px 0;
+border-top: 1px solid var(--border);
+text-align: center;
+color: var(--text-muted);
+font-size: 0.85rem;
+}
+.toast {
+position: fixed;
+bottom: 28px;
+left: 50%;
+transform: translateX(-50%) translateY(80px);
+background: var(--gold);
+color: #0b0b0e;
+font-weight: 700;
+padding: 12px 24px;
+border-radius: 12px;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+opacity: 0;
+transition: all 0.25s ease;
+z-index: 200;
+}
+.toast.show {
+transform: translateX(-50%) translateY(0);
+opacity: 1;
+}
+@media (max-width: 600px) {
+.hero { padding: 50px 0 40px; }
+.btn { width: 100%; }
+header { flex-direction: column; gap: 14px; }
+}
+
+
+
+
+B
+BUTORIONSMP
+
+
+
+Проверяем онлайн...
+
+⚔️ 1 Сезон • Старт 25 ноября в 19:00 МСК • 1.21.1 Fabric
+Приватный SMP без доната
+и лишних правил
+Ламповое выживание с голосовым чатом прямо в игре, новой боёвкой на копьях и булавах,
+честными войнами кланов и железными 20 TPS на мощном железе.
+Начать играть
+Наш Discord
+
+🔒 Вход на сервер по бесплатному вайтлисту — подача заявки в нашем Discord
+🎙️
+Живой голосовой чат
+Общайся с игроками рядом прямо в игре через Simple Voice Chat и используй эмоции.
+🔱
+Новая динамичная боёвка
+Копья с рывками, смена булавы без КД и честные клановые войны (рейды только в онлайне).
+🛡️
+Порядок без приватов
+Никаких уродливых сеток приватов: каждый блок пишется в логи Ledger, гриферы сразу в бан.
+⚡
+20 TPS и карта 10k×10k
+Мощный сервер в Москве на Ryzen 9, заранее прогруженный мир и вход с пиратки и лицензии.
+← Вернуться на главную
+Как начать играть
+Всего 3 простых шага — настройка займёт меньше двух минут.
+1
+Подай заявку в вайтлист в Discord
+На сервере действует закрытый белый список (Whitelist), чтобы защитить постройки от гриферов и читеров.
+Зайди в наш Discord и заполни короткую анкету — принимаем бесплатно за пару минут!
+Перейти в Discord и подать заявку →
+
+2
+Скачай сборку игры (1.21.1 Fabric)
+Выбери удобный для тебя вариант установки (подходит для пиратки и лицензии):
+Готовый лаунчер + сборка
+Проще всего
+
+
+Уже всё настроено: Fabric 1.21.1, все нужные моды, 4 ГБ ОЗУ и вшитый IP сервера. Распаковал и играешь.
+
+
+↓ Скачать BUTORION-Launcher.zip
+Только моды отдельно
+
+
+Архив с папкой mods и подробной инструкцией для TLauncher, Legacy, Prism, Modrinth и лицензии.
+
+
+↓ Скачать BUTORION-Mods.zip
+
+
+3
+Заходи на сервер
+В готовом лаунчере сервер уже добавлен в «Сетевую игру». Если ставил моды вручную — впиши этот адрес
+(если при входе горит перечёркнутая вилка войса — нажми клавишу V и выбери свой микрофон):
+butorion.ru
+Скопировать IP
+
+
+
+
+BUTORION-SMP © 2026 • Работает на Fabric 1.21.1 • Не связан с Mojang AB
+
+IP butorion.ru скопирован!
+// ==========================================
+// ВСТАВЬ СВОИ 3 ССЫЛКИ В ЭТОТ БЛОК:
+// ==========================================
+const CONFIG = {
+serverIP: 'butorion.ru',
+discordInvite: 'https://discord.gg/fqfgdKMhc',
+launcherDownloadUrl: 'github.com',
+modsDownloadUrl: 'github.com'
+};
+// Подстановка ссылок
+document.querySelectorAll('.js-discord').forEach(el => el.href = CONFIG.discordInvite);
+document.getElementById('dl-launcher').href = CONFIG.launcherDownloadUrl;
+document.getElementById('dl-mods').href = CONFIG.modsDownloadUrl;
+// Переключение между главной и страницей "Начать играть"
+const pageHome = document.getElementById('page-home');
+const pagePlay = document.getElementById('page-play');
+function showPage(page) {
+pageHome.classList.remove('active');
+pagePlay.classList.remove('active');
+page.classList.add('active');
+window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.getElementById('go-play').addEventListener('click', () => showPage(pagePlay));
+document.getElementById('go-home').addEventListener('click', () => showPage(pageHome));
+document.getElementById('logo-home').addEventListener('click', () => showPage(pageHome));
+// Копирование IP
+const copyBox = document.getElementById('copy-ip');
+const toast = document.getElementById('toast');
+const copyLabel = document.getElementById('copy-label');
+copyBox.addEventListener('click', () => {
+navigator.clipboard.writeText(CONFIG.serverIP);
+copyLabel.textContent = 'Скопировано!';
+toast.classList.add('show');
+setTimeout(() => {
+toast.classList.remove('show');
+copyLabel.textContent = 'Скопировать IP';
+}, 2200);
+});
+// Живой онлайн сервера
+async function checkServerStatus() {
+const dot = document.getElementById('status-dot');
+const text = document.getElementById('status-text');
+try {
+const res = await fetch(https://mcsrvstat.us{CONFIG.serverIP});
+const data = await res.json();
+if (data.online) {
+dot.classList.remove('offline');
+text.textContent = Онлайн: ${data.players.online} / ${data.players.max};
+} else {
+dot.classList.add('offline');
+text.textContent = 'Старт 25 ноября в 19:00';
+}
+} catch (e) {
+text.textContent = 'IP: butorion.ru';
+}
+}
+checkServerStatus();
+
+
