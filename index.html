@@ -776,7 +776,7 @@
       const dot = document.getElementById('status-dot');
       const text = document.getElementById('status-text');
       try {
-        const res = await fetch('https://mcsrvstat.us');
+        const res = await fetch('https://mcsrvstat.us/java/butorion.ru');
         const data = await res.json();
         if (data && data.online) {
           dot.classList.remove('offline');
