@@ -699,7 +699,7 @@
           <p class="step-desc">Выбери удобный для тебя вариант установки (подходит как для пиратки, так и для лицензии):</p>
 
           <div class="dl-grid">
-            <a href="https://github.com/butorionsmp/butorion/releases/download/v1.0/BUTORION-Launcher.zip
+            <a href="https://github.com/butorionsmp/butorion/releases/download/v1.1/butorion-smp.zip
 " class="dl-box featured">
               <div>
                 <div class="dl-top">
@@ -711,7 +711,7 @@
               <span class="dl-action">⬇ Скачать BUTORION-Launcher.zip</span>
             </a>
 
-            <a href="https://github.com/butorionsmp/butorion/releases/download/v1.0/BUTORION-Mods-1.21.1.zip
+            <a href="https://github.com/butorionsmp/butorion/releases/download/v1.1/BUTORION-Mods-1.21.1.zip
 " class="dl-box">
               <div>
                 <div class="dl-top">
@@ -740,6 +740,196 @@
         </div>
       </section>
     </main>
+  </div>
+  <!-- СИСТЕМНЫЕ ТРЕБОВАНИЯ, FAQ И СОЦСЕТИ -->
+  <style>
+    .btr-extra { margin-top: 64px; }
+    .btr-sec-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .btr-sec-sub {
+      text-align: center;
+      color: var(--muted, #9ca3af);
+      font-size: 14.5px;
+      margin-bottom: 28px;
+    }
+    .btr-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-bottom: 56px;
+    }
+    .btr-spec-card {
+      background: var(--card, rgba(255,255,255,0.03));
+      border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 16px;
+      padding: 22px;
+    }
+    .btr-spec-card.rec {
+      border-color: var(--accent, #8b5cf6);
+    }
+    .btr-spec-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      background: rgba(255,255,255,0.07);
+      color: var(--muted, #d1d5db);
+    }
+    .btr-spec-card.rec .btr-spec-badge {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+    }
+    .btr-spec-list { list-style: none; padding: 0; margin: 0; }
+    .btr-spec-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 13.5px;
+    }
+    .btr-spec-list li:last-child { border-bottom: none; }
+    .btr-spec-list span:first-child { color: var(--muted, #9ca3af); }
+    .btr-spec-list span:last-child { font-weight: 600; text-align: right; }
+
+    .btr-faq {
+      max-width: 780px;
+      margin: 0 auto 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btr-faq details {
+      background: var(--card, rgba(255,255,255,0.03));
+      border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 14px;
+      padding: 16px 20px;
+    }
+    .btr-faq details[open] { border-color: var(--accent, #8b5cf6); }
+    .btr-faq summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+    .btr-faq summary::-webkit-details-marker { display: none; }
+    .btr-faq summary::after {
+      content: "+";
+      font-size: 20px;
+      color: var(--accent, #a78bfa);
+      flex-shrink: 0;
+    }
+    .btr-faq details[open] summary::after { content: "−"; }
+    .btr-faq p {
+      margin: 12px 0 0;
+      color: var(--muted, #9ca3af);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .btr-socials { text-align: center; }
+    .btr-social-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .btr-social-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card, rgba(255,255,255,0.04));
+      border: 1px solid var(--border, rgba(255,255,255,0.12));
+      color: var(--text, #ffffff);
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .btr-social-btn svg { width: 24px; height: 24px; fill: currentColor; }
+    .btr-social-btn.tg:hover { background: #229ED9; border-color: #229ED9; transform: translateY(-3px); }
+    .btr-social-btn.ds:hover { background: #5865F2; border-color: #5865F2; transform: translateY(-3px); }
+  </style>
+
+  <div class="btr-extra">
+    <h2 class="btr-sec-title">Системные требования</h2>
+    <p class="btr-sec-sub">Оптимизировано на Sodium и Lithium — пойдёт даже на слабых ноутбуках</p>
+
+    <div class="btr-specs-grid">
+      <div class="btr-spec-card">
+        <span class="btr-spec-badge">Минимальные (чистая 1.21.11)</span>
+        <ul class="btr-spec-list">
+          <li><span>Процессор</span><span>Intel Core i3 / Ryzen 3</span></li>
+          <li><span>Оперативная память</span><span>4 ГБ (выделить 2–3 ГБ)</span></li>
+          <li><span>Видеокарта</span><span>Встроенная (OpenGL 4.4+)</span></li>
+          <li><span>Место на диске</span><span>1.5 ГБ</span></li>
+          <li><span>Java</span><span>Java 21</span></li>
+        </ul>
+      </div>
+
+      <div class="btr-spec-card rec">
+        <span class="btr-spec-badge">Рекомендуемые (наша сборка)</span>
+        <ul class="btr-spec-list">
+          <li><span>Процессор</span><span>Intel Core i5 / Ryzen 5+</span></li>
+          <li><span>Оперативная память</span><span>8+ ГБ (выделить 4 ГБ)</span></li>
+          <li><span>Видеокарта</span><span>GTX 1050 Ti / RX 570+</span></li>
+          <li><span>Место на диске</span><span>2.5 ГБ (SSD)</span></li>
+          <li><span>Микрофон</span><span>Для голосового чата</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="btr-sec-title">Частые вопросы</h2>
+    <p class="btr-sec-sub">Всё, что нужно знать перед заходом на BUTORION-SMP</p>
+
+    <div class="btr-faq">
+      <details open>
+        <summary>Нужна ли лицензия Minecraft для игры?</summary>
+        <p>Нет. На сервер пускает как с официальной лицензии, так и с любого пиратского лаунчера (Prism, Legacy, TLauncher и др.). Аккаунт защищён паролем прямо при входе.</p>
+      </details>
+
+      <details>
+        <summary>Обязательно ли скачивать вашу сборку модов?</summary>
+        <p>Нет, можно зайти с обычной чистой версии Minecraft 1.21.11 без модов по IP <strong>butorion.ru</strong>. Но для голосового чата и эмоций рекомендуем скачать нашу сборку во вкладке «Начать играть».</p>
+      </details>
+
+      <details>
+        <summary>Есть ли на сервере донат, киты и приваты?</summary>
+        <p>Никакого доната, влияющего на игру, нет. Каждый блок и сундук записываются в логи — любой гриф откатывается администрацией за минуту, а нарушитель получает бан.</p>
+      </details>
+
+      <details>
+        <summary>Когда открытие 1-го сезона?</summary>
+        <p>Старт сезона состоится в пятницу, <strong>27 ноября, в 19:00 по МСК</strong>. На первые выходные вход по IP <strong>butorion.ru</strong> открыт для всех желающих.</p>
+      </details>
+    </div>
+
+    <div class="btr-socials">
+      <h2 class="btr-sec-title">Наши соцсети</h2>
+      <p class="btr-sec-sub">Анонсы ивентов, новости сезона и общение игроков</p>
+      <div class="btr-social-row">
+        <a href="https://t.me" target="_blank" rel="noopener" class="btr-social-btn tg" title="Telegram-канал">
+          <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://discord.gg" target="_blank" rel="noopener" class="btr-social-btn ds" title="Discord-сервер">
+          <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        </a>
+      </div>
+    </div>
   </div>
 
   <footer>
